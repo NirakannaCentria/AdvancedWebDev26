@@ -1,4 +1,10 @@
-# Video 1
+# Microsoft Beginner's series to JavaScript
+
+I have made these notes trying to see my future needs, but also trying to make notes that will serve me in this course, with things and concepts that I know I struggle with.
+
+---
+
+# Video 1: Introduction
 This video was just an introduction of JavaScript, the goals of the course, and the instructors that will be delivering the presentations and the learning materials.
 
 # Video 2: What is JavaScript?
@@ -183,7 +189,7 @@ This video clearly highlights the difference between using `==` versus `===`, an
 
 It also provides a good visualization of when to use curly brackets (`{}`) and how `if` statements work.
 
----
+
 
 # Video 27: Boolean Logic with switch and Other Syntax
 
