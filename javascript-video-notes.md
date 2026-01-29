@@ -70,10 +70,10 @@ Template literals → Flexible formatting, syntax makes strings easier to format
 Uses backticks, template literals only require the backtick character, placed at the beginning and end of a string  
 Template literals respect line breaks
 
-# Video 14: Demo of Using template literals to format strings
-This is similar to what I have learned in previous programming courses. I think using template literals require a lot of practice before it comes naturally, the examples used in the video were not that great. I think a better example could have been to have maybe a presentation of a person:
+### Video 14: Demo of Using Template Literals to Format Strings
 
-```js
+This is similar to what I have learned in previous programming courses. I think using template literals requires a lot of practice before it comes naturally. The examples used in the video were not that great. I think a better example could have been a presentation of a person:
+
 let str1 = "Anna-Karin";
 let str2 = "sushi";
 console.log(`I am ${str1}`);
