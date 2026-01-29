@@ -70,7 +70,7 @@ Template literals → Flexible formatting, syntax makes strings easier to format
 Uses backticks, template literals only require the backtick character, placed at the beginning and end of a string  
 Template literals respect line breaks
 
-### Video 14: Demo of Using Template Literals to Format Strings
+# Video 14: Demo of Using Template Literals to Format Strings
 
 This is similar to what I have learned in previous programming courses. I think using template literals requires a lot of practice before it comes naturally. The examples used in the video were not that great. I think a better example could have been a presentation of a person:
 
@@ -98,13 +98,52 @@ It is best to use the `Math` object for mathematical operations.
 This object provides a set of constants and functions, such as trigonometric and logarithmic functions.
 
 # Video 18: Demo of Math in JavaScript
-Basic math such as addition, subtraction, multiplication, and division are easily executed in JavaScript.  
+Basic math such as addition, subtraction, multiplication, and division are easily executed in JavaScript.
 
-Some code snippets worth remembering:
-```js
-let num1 = 100;
+Some simple snippets of code that I want to remember from this video are these:
 
-console.log(++num1);        // 101
-console.log(--num1);        // 100
-console.log(Math.PI);       // 3.1415...
-console.log(Math.sqrt(num1)); // 10
+let num1 = 100  
+console.log(++num1); → 101  
+console.log(--num1); → 100  
+console.log(Math.PI); → prints out the number pi (3.1415…)  
+console.log(Math.sqrt(num1)); → square root of 100 = 10
+
+# Video 19: Converting strings to numbers
+`parseInt()` and `parseFloat()` convert numerical strings to numbers.  
+`parseFloat()` is used for decimal numbers.  
+`toString()` converts numbers to numerical strings.
+
+# Video 20: Demo of converting strings to numbers
+
+The things I want to remember from this video are the following snippets, as they represent what I usually forget when I write code: the difference between numbers and floating numbers, and to check whether I am working with strings or numbers.
+
+let num1 = '150';  
+let flo1 = '1.50';  
+console.log(parseInt(num1)); → 150  
+console.log(parseInt('ABC')); → NaN (not a number)  
+console.log(parseFloat(flo1)); → 1.5  
+console.log(parseInt('1.5')); → 1
+
+# Video 21: Handling Errors with try / catch / finally
+
+It is important to have the right terminology and use the right words.  
+An **exception** is an interruption in the intended execution of code, an **error** is an unintended interruption in code execution, and **throwing an exception** means generating a message that something has gone wrong in the intended execution of code.
+
+Try = a block of code that may throw an exception.  
+Catch = a block of code that will run if an exception is thrown.  
+Finally = an optional block of code that will run after the try block or after the catch block.
+
+---
+
+# Video 22: Demo of Handling Errors with try / catch / finally
+
+throw exception 'myException';  
+throw true;
+
+When this is printed, it will show up in the console as `throw 'myException';` with the message from the code, in this case just **myException**.
+
+**My takeaways from the video:**
+
+- throw immediately stops execution inside `try`  
+- catch receives whatever was thrown  
+- finally always runs, even when an error occurs
