@@ -4,11 +4,30 @@
 const actions = document.getElementById("resourceActions");
 const resourceNameContainer = document.getElementById("resourceNameContainer");
 
+// my add
+const descEl = document.getElementById("resourceDescription");
+const priceEl = document.getElementById("resourcePrice");
+const unitEls = document.querySelectorAll('input[name="resourcePriceUnit"]');
+
+
 // Example roles
 const role = "admin"; // "reserver" | "admin"
 
 // Will hold a reference to the Create button so we can enable/disable it
 let createButton = null;
+
+//my add
+let updateButton = null;
+let deleteButton = null;
+
+let resourceNameValid = false;
+let resourceDescriptionValid = false;
+
+function updateCreateEnabledState() {
+  const allValid = resourceNameValid && resourceDescriptionValid;
+  setButtonEnabled(createButton, allValid);
+}
+
 
 // ===============================
 // 2) Button creation helpers
@@ -116,6 +135,67 @@ function createResourceNameInput(container) {
   container.appendChild(input);
   return input;
 }
+function isNameValid(value) {
+  const trimmed = value.trim();
+  const allowed = /^[a-zA-Z0-9äöåÄÖÅ ]+$/;
+  return trimmed.length >= 5 && trimmed.length <= 30 && allowed.test(trimmed);
+}
+
+function isDescriptionValid(value) {
+  const trimmed = value.trim();
+  const allowed = /^[a-zA-Z0-9äöåÄÖÅ .,!?\-()]+$/;
+  return trimmed.length >= 10 && trimmed.length <= 50 && allowed.test(trimmed);
+}
+
+function isPriceValid(value) {
+  const trimmed = String(value ?? "").trim();
+  if (trimmed === "") return false;          // required
+  const num = Number(trimmed);
+  return Number.isFinite(num) && num >= 0;
+}
+
+function getSelectedUnit() {
+  const checked = document.querySelector('input[name="resourcePriceUnit"]:checked');
+  return checked ? checked.value : "";
+}
+function setValidState(el, valid) {
+  if (!el) return;
+
+  el.classList.remove(
+    "border-green-500", "bg-green-100", "focus:ring-green-500/30",
+    "border-red-500", "bg-red-100", "focus:ring-red-500/30"
+  );
+
+  el.classList.add("focus:ring-2");
+
+  if (valid) {
+    el.classList.add("border-green-500", "bg-green-100", "focus:ring-green-500/30");
+  } else {
+    el.classList.add("border-red-500", "bg-red-100", "focus:ring-red-500/30");
+  }
+}
+function recompute() {
+  const nameEl = document.getElementById("resourceName"); // created dynamically
+  if (!nameEl || !descEl || !priceEl) {
+    setButtonEnabled(createButton, false);
+    return;
+  }
+
+  const nameRaw = nameEl.value ?? "";
+  const descRaw = descEl.value ?? "";
+
+  const nameOk = isNameValid(nameRaw);
+  const descOk = isDescriptionValid(descRaw);
+  const priceOk = isPriceValid(priceEl.value);
+  const unitOk = !!getSelectedUnit();
+
+  // Step 4 visuals (only name + description required)
+  setValidState(nameEl, nameRaw.trim() !== "" && nameOk);
+  setValidState(descEl, descRaw.trim() !== "" && descOk);
+
+  // Step 2: enable only when ALL required fields valid
+  setButtonEnabled(createButton, nameOk && descOk && priceOk && unitOk);
+}
 
 function isResourceNameValid(value) {
   const trimmed = value.trim();
@@ -128,6 +208,17 @@ function isResourceNameValid(value) {
 
   return lengthValid && charactersValid;
 }
+function isResourceDescriptionValid(value) {
+  const trimmed = value.trim();
+
+  const allowedPattern = /^[a-zA-Z0-9äöåÄÖÅ .,!?\-()]+$/;
+
+  const lengthValid = trimmed.length >= 10 && trimmed.length <= 200;
+  const charactersValid = allowedPattern.test(trimmed);
+
+  return lengthValid && charactersValid;
+}
+
 
 function setInputVisualState(input, state) {
   // Reset to neutral base state (remove only our own validation-related classes)
@@ -176,12 +267,47 @@ function attachResourceNameValidation(input) {
   // Initialize state on page load (Create disabled until valid)
   update();
 }
+function attachResourceDescriptionValidation(input) {
+  const update = () => {
+    const raw = input.value;
+
+    if (raw.trim() === "") {
+      setInputVisualState(input, "neutral");
+      resourceDescriptionValid = false;
+      updateCreateEnabledState();
+      return;
+    }
+
+    const valid = isResourceDescriptionValid(raw);
+    resourceDescriptionValid = valid;
+
+    setInputVisualState(input, valid ? "valid" : "invalid");
+    updateCreateEnabledState();
+  };
+
+  input.addEventListener("input", update);
+  update();
+}
+
 
 // ===============================
 // 4) Bootstrapping
 // ===============================
+
+
 renderActionButtons(role);
 
-// Create + validate input
+// This creates the #resourceName input dynamically
 const resourceNameInput = createResourceNameInput(resourceNameContainer);
-attachResourceNameValidation(resourceNameInput);
+
+// Now wire validation (after elements exist)
+resourceNameInput.addEventListener("input", recompute);
+descEl.addEventListener("input", recompute);
+priceEl.addEventListener("input", recompute);
+priceEl.addEventListener("change", recompute);
+unitEls.forEach(r => r.addEventListener("change", recompute));
+
+// Set initial disabled state
+recompute();
+
+

@@ -29,14 +29,41 @@ async function onSubmit(event) {
   event.preventDefault();
   const submitter = event.submitter;
   const actionValue = submitter && submitter.value ? submitter.value : "create";
-  const payload = {
-    action: actionValue,
-    resourceName: $("resourceName")?.value ?? "",
-    resourceDescription: $("resourceDescription")?.value ?? "",
-    resourceAvailable: $("resourceAvailable")?.value ?? "",
-    resourcePrice: $("resourcePrice")?.value ?? "",
-    resourcePriceUnit: $("resourcePriceUnit")?.value ?? ""
-  };
+ // --- Clean values ---
+const resourceName = ($("resourceName")?.value ?? "").trim();
+const resourceDescription = ($("resourceDescription")?.value ?? "").trim();
+const resourceAvailable = $("resourceAvailable")?.checked ?? false;
+
+const priceRaw = ($("resourcePrice")?.value ?? "").trim();
+const resourcePrice = priceRaw === "" ? null : Number(priceRaw);
+
+const selectedUnit = document.querySelector('input[name="resourcePriceUnit"]:checked');
+const resourcePriceUnit = selectedUnit ? selectedUnit.value : "";
+
+// --- Validate BEFORE sending ---
+const valid =
+  resourceName.length >= 5 &&
+  resourceDescription.length >= 10 &&
+  resourcePrice !== null &&
+  Number.isFinite(resourcePrice) &&
+  resourcePrice >= 0 &&
+  !!resourcePriceUnit;
+
+if (!valid) {
+  alert("Please fill in all required fields with valid values.");
+  return; // 🚫 Do NOT send request
+}
+
+// --- Final clean payload ---
+const payload = {
+  action: actionValue,
+  resourceName,
+  resourceDescription,
+  resourceAvailable,
+  resourcePrice,
+  resourcePriceUnit
+};
+
 
   logSection("Sending payload to httpbin.org/post", payload);
 
